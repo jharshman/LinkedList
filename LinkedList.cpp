@@ -15,24 +15,25 @@ private:
      * Nested Node Class
      * Class Function Definitions and Implementations
      */
+    template <class U>
     class Node {
     protected:
         T data;
-        Node *next;
+        Node<U> *next;
     public:
         /* Constructors */
         Node();
-        Node(T data, Node *next);
-        Node(const Node &orig);
+        Node(T data, Node<U> *next);
+        Node(const Node<U> &orig);
         ~Node();
 
         /* Assessors */
         T getData() const { return data; }
-        Node *getNext() const { return next; }
+        Node<U> *getNext() const { return next; }
 
         /* Modifiers */
         void setData(T data);
-        void setNext(Node *next);
+        void setNext(Node<U> *next);
     };
 
     /*
@@ -53,60 +54,50 @@ public:
     bool add(T data);
     bool add(int index, T data);
     bool remove(T data);
-
-
-    /*
-    bool seek(const T &element); // seek element and return true if found
-    void addFirst(const T &element);
-    bool add(const T &element); //add new node at end of list
-    void add(int index, const T &element); // add node at index. throw exception if out of bounds
-    bool remove(T &element); // remove first element of specified data from list
-    bool remove(int index); // remove data at index.  Throw exception if out of bounds.
-    bool removeall(T &data); // remove all instances of specified data
-    bool first(T &element);
-    inline void deepCopy(const LinkedList<T> &orig);
-    inline bool getNext(T &element);
-     */
+    void clear();
 
 private:
-    Node *head;
-    Node *cur;
+    Node<T> *head;
+    Node<T> *cur;
     int size;
-
 };
 
 /**
  * Nested Node Implementation
  * */
 template <class T>
-LinkedList<T>::Node::Node() {
+template <class U>
+LinkedList<T>::Node<U>::Node() {
     data = nullptr;
     next = nullptr;
 }
 
 template <class T>
-LinkedList<T>::Node::Node(const LinkedList::Node &orig) {
+template <class U>
+LinkedList<T>::Node<U>::Node(const LinkedList<T>::Node<U> &orig) {
     setData(orig.getData());
     setNext(orig.getNext());
 }
 
 template <class T>
-void LinkedList<T>::Node::setData(T data) {
+template <class U>
+void LinkedList<T>::Node<U>::setData(T data) {
     this->data = data;
 }
 
 template <class T>
-void LinkedList<T>::Node::setNext(Node *next) {
+template <class U>
+void LinkedList<T>::Node<U>::setNext(Node<U> *next) {
     this->next = next;
 }
 
 // --- [ END NODE CLASS IMPLEMENTATION ] ---
 
-
 /**
  * Linked List Implementation
  * */
 
+/*
 template <class T>
 LinkedList<T>::LinkedList() : head(0),  cur(0) { }
 
@@ -165,6 +156,15 @@ bool LinkedList<T>::remove(T data) {
     return false;
 }
 
+template <class T>
+void LinkedList<T>::clear() {
+    head->setNext(NULL);
+    size=0;
+}
+
+
+
+
 
 /*
 template <class T>
@@ -189,34 +189,6 @@ bool LinkedList<T>::first(T &element) {
     element = head->getData();
     cur = head;
     return true;
-}
-
-template <class T>
-void LinkedList::addFirst(const T &element) {
-    Node<T> *current = this->head;
-    current->setNext(new Node(element, current->getNext()));
-    size++;
-}
-
-template <class T>
-bool LinkedList<T>::add(const T &element) {
-    if(isEmpty()) {
-        addFirst(element);
-        size++;
-        return true;
-    }
-    Node<T> *current = this->head;
-    while( current->getNext() != NULL ) {
-        current = current->getNext();
-    }
-    current->setNext( new Node<T>(element, NULL) );
-    size++;
-    return true;
-}
-
-template <class T>
-void LinkedList<T>::add(int index, const T &element) {
-
 }
 
 template <class T>
