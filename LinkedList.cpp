@@ -4,7 +4,9 @@
  * 08/13/2015
  * */
 
-#include "LinkedList.h"
+//#include "LinkedList.h"
+#include <iostream>
+#include <sstream>
 
 template <class T>
 class LinkedList {
@@ -13,37 +15,37 @@ private:
 
     /*
      * Nested Node Class
-     * Class Function Definitions and Implementations
+     * Class Function Definitions and Inline Implementations
      */
-    template <class U>
     class Node {
     protected:
         T data;
-        Node<U> *next;
+        Node *next;
     public:
         /* Constructors */
         Node();
-        Node(T data, Node<U> *next);
-        Node(const Node<U> &orig);
+        Node(T data);
+        Node(T data, Node *next);
+        Node(const Node &orig);
         ~Node();
 
         /* Assessors */
         T getData() const { return data; }
-        Node<U> *getNext() const { return next; }
+        Node *getNext() const { return next; }
 
         /* Modifiers */
         void setData(T data);
-        void setNext(Node<U> *next);
+        void setNext(Node *next);
     };
 
     /*
      * Linked List Class
-     * Function Definitions and Implementations
+     * Function Definitions and Inline Implementations
      */
 public:
     /* Constructors */
     LinkedList();
-    ~LinkedList();
+    ~LinkedList() { std::cout << "[DESTRUCTOR]: Destroying List" << std::endl; }
     LinkedList(const LinkedList<T> &orig);
 
     /* Subroutines */
@@ -55,10 +57,10 @@ public:
     bool add(int index, T data);
     bool remove(T data);
     void clear();
+    void print();
 
 private:
-    Node<T> *head;
-    Node<T> *cur;
+    Node *head;
     int size;
 };
 
@@ -66,28 +68,36 @@ private:
  * Nested Node Implementation
  * */
 template <class T>
-template <class U>
-LinkedList<T>::Node<U>::Node() {
-    data = nullptr;
-    next = nullptr;
+LinkedList<T>::Node::Node() {
+    data = NULL;
+    next = NULL;
 }
 
 template <class T>
-template <class U>
-LinkedList<T>::Node<U>::Node(const LinkedList<T>::Node<U> &orig) {
+LinkedList<T>::Node::Node(T data) {
+    this->data = data;
+    this->next = NULL;
+}
+
+template <class T>
+LinkedList<T>::Node::Node(T data, Node *next) {
+    setData(data);
+    setNext(next);
+}
+
+template <class T>
+LinkedList<T>::Node::Node(const LinkedList<T>::Node &orig) {
     setData(orig.getData());
     setNext(orig.getNext());
 }
 
 template <class T>
-template <class U>
-void LinkedList<T>::Node<U>::setData(T data) {
+void LinkedList<T>::Node::setData(T data) {
     this->data = data;
 }
 
 template <class T>
-template <class U>
-void LinkedList<T>::Node<U>::setNext(Node<U> *next) {
+void LinkedList<T>::Node::setNext(Node *next) {
     this->next = next;
 }
 
@@ -97,9 +107,8 @@ void LinkedList<T>::Node<U>::setNext(Node<U> *next) {
  * Linked List Implementation
  * */
 
-/*
 template <class T>
-LinkedList<T>::LinkedList() : head(0),  cur(0) { }
+LinkedList<T>::LinkedList() : head( new Node(0) ), size(0) { }
 
 template <class T>
 void LinkedList<T>::addFirst(T data) {
@@ -116,6 +125,7 @@ void LinkedList<T>::addLast(T data) {
         Node *cur = this->head;
         while ( cur->getNext() != NULL )
             cur = cur->getNext();
+
         cur->setNext( new Node(data, NULL) );
         this->size++;
     }
@@ -151,20 +161,31 @@ bool LinkedList<T>::add(int index, T data) {
 }
 
 template <class T>
-bool LinkedList<T>::remove(T data) {
-    //TODO: Implement this
-    return false;
-}
-
-template <class T>
 void LinkedList<T>::clear() {
     head->setNext(NULL);
     size=0;
 }
 
+template <class T>
+void LinkedList<T>::print() {
+    std::stringstream out;
+    out << "Contents: " << std::endl;
+    Node *cur = this->head;
+    while ( cur != NULL ) {
+        out << cur->getData() << std::endl;
+        cur = cur->getNext();
+    }
 
+    std::cout << out.str();
+}
 
-
+/*
+template <class T>
+bool LinkedList<T>::remove(T data) {
+    //TODO: Implement this
+    return false;
+}
+*/
 
 /*
 template <class T>
