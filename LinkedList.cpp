@@ -114,7 +114,7 @@ LinkedList<T>::LinkedList() : head( new Node(0) ), size(0) { }
 
 template <class T>
 void LinkedList<T>::addFirst(T data) {
-    Node *cur = this->head; removeAll(T data);
+    Node *cur = this->head;
     cur->setNext( new Node(data, NULL) );
     this->size++;
 }
@@ -197,7 +197,7 @@ bool LinkedList<T>::remove(T data) {
 template <class T>
 T LinkedList<T>::remove_at_index(int index) {
     if(index < 0 || index >= this->size )
-        throw new Node("Index Out of Bounds Exception");
+        return 0;
     Node *cur, *prev;
     cur = this->head->getNext();
     prev = NULL;
@@ -220,8 +220,18 @@ T LinkedList<T>::remove_at_index(int index) {
 }
 
 template <class T>
-bool removeAll(T data) {
-
+bool LinkedList<T>::removeAll(T data) {
+    Node *cur = this->head->getNext();
+    int index = 0;
+    if( data == NULL )  return false;
+    while ( cur != NULL ) {
+        if(cur->getData() == data) {
+            remove(data);
+        }
+        cur = cur->getNext();
+        index++;
+    }
+    return true;
 }
 
 // --- [ END LINKEDLIST CLASS ] ---
