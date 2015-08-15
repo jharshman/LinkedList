@@ -56,6 +56,8 @@ public:
     bool add(T data);
     bool add(int index, T data);
     bool remove(T data);
+    T remove_at_index(int index);
+    bool removeAll(T data);
     void clear();
     void print();
 
@@ -112,7 +114,7 @@ LinkedList<T>::LinkedList() : head( new Node(0) ), size(0) { }
 
 template <class T>
 void LinkedList<T>::addFirst(T data) {
-    Node *cur = this->head;
+    Node *cur = this->head; removeAll(T data);
     cur->setNext( new Node(data, NULL) );
     this->size++;
 }
@@ -179,83 +181,48 @@ void LinkedList<T>::print() {
     std::cout << out.str();
 }
 
-/*
 template <class T>
 bool LinkedList<T>::remove(T data) {
-    //TODO: Implement this
-    return false;
-}
-*/
-
-/*
-template <class T>
-LinkedList<T>::LinkedList(const LinkedList<T> &orig) {
-    deepCopy(orig);
-}
-
-template <class T>
-bool LinkedList<T>::seek(const T &element) {
-    T tmp;
-    if( first(tmp) )
-        do {
-            if( element == tmp )    return true;
-
-        } while( getNext(tmp) );
-    return false;
-}
-
-template <class T>
-bool LinkedList<T>::first(T &element) {
-    if(!head)   return false;
-    element = head->getData();
-    cur = head;
-    return true;
-}
-
-template <class T>
-bool LinkedList<T>::remove(T &element) {
-
-}
-
-template <class T>
-bool LinkedList<T>::remove(int index) {
-
-}
-
-template <class T>
-bool LinkedList<T>::removeall(T &data) {
-
-}
-
-template <class T>
-inline void LinkedList<T>::deepCopy(const LinkedList<T> &orig) {
-    head = cur = NULL;
-    if( orig.head == NULL )  return;
-    Node<T> *copy = head = new Node<T>;
-    Node<T> *original = orig.head;
-    copy->setData( original->getData() );
-    if( original == orig.head ) head = copy;
-    while( original->getNext() != NULL ) {
-        original = original->getNext();
-        copy->setNext(new Node<T>);
-        copy = copy->getNext();
-        copy->setData( original->getData() );
-        if( original == orig.head ) head = copy;
+    if( isEmpty() || data == NULL ) return false;
+    for(Node *prev = this->head, *cur = this->head->getNext(); cur != NULL; prev = cur, cur = cur->getNext()) {
+        if(cur->getData() == data) {
+            prev->setNext(cur->getNext());
+            this->size--;
+            return true;
+        }
     }
-    copy->setNext(NULL);
+    return false;
 }
 
 template <class T>
-inline bool LinkedList::getNext(T &element) {
-    if(!cur)    return false;
-    cur = cur->getNext();
-    if(!cur)    return false;
-    element = cur->getData();
-    return true;
+T LinkedList<T>::remove_at_index(int index) {
+    if(index < 0 || index >= this->size )
+        throw new Node("Index Out of Bounds Exception");
+    Node *cur, *prev;
+    cur = this->head->getNext();
+    prev = NULL;
+    T data;
+
+    if(index == 0) {
+        data = this->head->getNext()->getData();
+        this->head->setNext(this->head->getNext()->getNext());
+        this->size--;
+        return data;
+    }
+
+    for(int i = 0; i < index; i++) {
+        prev = cur;
+        cur = cur->getNext();
+    }
+    prev->setNext(cur->getNext());
+    this->size--;
+    return cur->getData();
 }
 
-// --- [ END LINKEDLIST CLASS IMPLEMENTATION ] ---
+template <class T>
+bool removeAll(T data) {
 
-*/
+}
 
+// --- [ END LINKEDLIST CLASS ] ---
 
