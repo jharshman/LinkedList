@@ -8,6 +8,13 @@
 #include <iostream>
 #include <sstream>
 
+/* Forward Prototypes */
+template <class T>
+class LinkedList;
+
+template <class T>
+std::ostream &operator<<(std::ostream &out, const LinkedList<T> &data);
+
 template <class T>
 class LinkedList {
 
@@ -27,7 +34,7 @@ private:
         Node(T data);
         Node(T data, Node *next);
         Node(const Node &orig);
-        ~Node();
+        ~Node() { };
 
         /* Assessors */
         T getData() const { return data; }
@@ -36,6 +43,7 @@ private:
         /* Modifiers */
         void setData(T data);
         void setNext(Node *next);
+
     };
 
     /*
@@ -45,7 +53,7 @@ private:
 public:
     /* Constructors */
     LinkedList();
-    ~LinkedList() { std::cout << "[DESTRUCTOR]: Destroying List" << std::endl; }
+    ~LinkedList();
     LinkedList(const LinkedList<T> &orig);
 
     /* Subroutines */
@@ -61,11 +69,28 @@ public:
     void clear();
     void print();
 
+    /* Operator Overload */
+    friend std::ostream &operator<< <>(std::ostream& out , const LinkedList<T>& data);
+
 private:
     Node *head;
     int size;
 };
 
+
+/**
+ * Operator Overload Implementations
+ * */
+template <class T>
+std::ostream& operator<<(std::ostream &out, const LinkedList<T> &data) {
+    std::stringstream ss;
+    Node *cur = data.head;
+    while ( cur != NULL )
+        ss << "[ " << cur->getData() << " ]~> ";
+    ss << std::endl;
+    out << ss.str();
+    return out;
+}
 /**
  * Nested Node Implementation
  * */
@@ -111,6 +136,12 @@ void LinkedList<T>::Node::setNext(Node *next) {
 
 template <class T>
 LinkedList<T>::LinkedList() : head( new Node(0) ), size(0) { }
+
+template <class T>
+LinkedList<T>::~LinkedList() {
+    clear();
+    delete head;
+}
 
 template <class T>
 void LinkedList<T>::addFirst(T data) {

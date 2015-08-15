@@ -5,5 +5,4 @@
 #ifndef LINKEDLIST_LINKEDLIST_H
 #define LINKEDLIST_LINKEDLIST_H
 #include <iostream>
-
 #endif //LINKEDLIST_LINKEDLIST_H
