@@ -8,13 +8,6 @@
 #include <iostream>
 #include <sstream>
 
-/* Forward Prototypes */
-template <class T>
-class LinkedList;
-
-template <class T>
-std::ostream &operator<<(std::ostream &out, const LinkedList<T> &data);
-
 template <class T>
 class LinkedList {
 
@@ -46,6 +39,33 @@ private:
 
     };
 
+    /**
+     * Nested Iterator Class
+     * Class Function Definitions and Inline Implementations
+     * */
+    class Iterator {
+    private:
+        Node *nextNode;
+        int index;
+
+    public:
+        Iterator() {}
+        Iterator(Node *start) {
+            this->nextNode = start;
+            this->index = 0;
+        }
+        bool hasNext() {
+            return (nextNode != NULL);
+        }
+        T next() {
+            if( !hasNext() ) return 0;
+            T res = nextNode->getData();
+            nextNode = nextNode->getNext();
+            return res;
+        }
+
+    };
+
     /*
      * Linked List Class
      * Function Definitions and Inline Implementations
@@ -68,9 +88,12 @@ public:
     bool removeAll(T data);
     void clear();
     void print();
+    T get();
 
     /* Operator Overload */
-    friend std::ostream &operator<< <>(std::ostream& out , const LinkedList<T>& data);
+    //friend std::ostream &operator<< <>(std::ostream& out , const LinkedList<T>& data);
+    LinkedList &operator=(const LinkedList &rhs);
+
 
 private:
     Node *head;
@@ -79,8 +102,28 @@ private:
 
 
 /**
- * Operator Overload Implementations
+ * Operator Overload Implementation
  * */
+template <class T>
+LinkedList<T> &LinkedList<T>::operator=(const LinkedList &rhs) {
+    if(&rhs != this) {
+        Node *tmp = head;
+        while( tmp->getNext() != NULL) {
+            head = head->getNext();
+            delete tmp;
+            tmp = head;
+        }
+
+        this->size = 0;
+        tmp = rhs.head;
+        while (tmp!= NULL) {
+            add(tmp->getData(), tmp->getNext());
+        }
+
+    }
+    return *this;
+}
+/*
 template <class T>
 std::ostream& operator<<(std::ostream &out, const LinkedList<T> &data) {
     std::stringstream ss;
@@ -91,6 +134,7 @@ std::ostream& operator<<(std::ostream &out, const LinkedList<T> &data) {
     out << ss.str();
     return out;
 }
+ */
 /**
  * Nested Node Implementation
  * */
@@ -136,6 +180,13 @@ void LinkedList<T>::Node::setNext(Node *next) {
 
 template <class T>
 LinkedList<T>::LinkedList() : head( new Node(0) ), size(0) { }
+
+template <class T>
+LinkedList<T>::LinkedList(const LinkedList<T> &orig) {
+    Node *tmp = orig.head;
+    while (tmp != NULL)
+        add(tmp->getData(), tmp->getNext());
+}
 
 template <class T>
 LinkedList<T>::~LinkedList() {
@@ -205,10 +256,10 @@ void LinkedList<T>::print() {
     out << "Contents: " << std::endl;
     Node *cur = this->head;
     while ( cur != NULL ) {
-        out << cur->getData() << std::endl;
+        out << "[ " << cur->getData() << " ]~>";
         cur = cur->getNext();
     }
-
+    out << std::endl;
     std::cout << out.str();
 }
 
@@ -263,6 +314,11 @@ bool LinkedList<T>::removeAll(T data) {
         index++;
     }
     return true;
+}
+
+template <class T>
+T LinkedList<T>::get() {
+    return ( this->head->getData() );
 }
 
 // --- [ END LINKEDLIST CLASS ] ---
