@@ -1,6 +1,6 @@
 /**
  * Josh Harshman
- * LinkedList tester
+ * Terribly Coded (But gets the job done) LinkedList Tester
  * */
 
 #include <iostream>

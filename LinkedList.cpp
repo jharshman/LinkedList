@@ -135,6 +135,7 @@ std::ostream& operator<<(std::ostream &out, const LinkedList<T> &data) {
     return out;
 }
  */
+
 /**
  * Nested Node Implementation
  * */
